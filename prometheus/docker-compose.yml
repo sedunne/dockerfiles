@@ -1,0 +1,36 @@
+## basic prometheus deployment
+## see https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml and other examples in the source repo for quickstart config files
+## the bind mount path will likely need to be adjusted for your environment
+version: "3.4"
+
+services:
+  prometheus:
+    image: bitnami/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - "prometheus-data:/opt/bitnami/prometheus/data"
+      - type: bind
+        source: /srv/metrics/prometheus.yml
+        target: /opt/bitnami/prometheus/conf/prometheus.yml
+
+  alertmanager:
+    image: bitnami/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - "alertmanager-data:/opt/bitnami/data"
+      - type: bind
+        source: /srv/metrics/alertmanager.yml
+        target: /opt/bitnami/alertmanager/conf/config.yml
+
+  grafana:
+    image: bitnami/grafana:latest
+    ports:
+      - "3000:3000"
+
+volumes:
+  prometheus-data:
+    name: prometheus-data
+  alertmanager-data:
+    name: alertmanager-data
