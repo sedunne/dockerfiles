@@ -1,0 +1,12 @@
+## sets up basic https://github.com/Nukesor/pueue/ server
+FROM rust:1.55 AS build
+
+ENV PUEUE_VERSION="v1.0.3"
+
+WORKDIR "/usr/src/pueue-${PUEUE_VERSION}"
+
+RUN curl -L https://github.com/Nukesor/pueue/archive/refs/tags/${PUEUE_VERSION}.tar.gz | tar --strip-components=1 -xzf -
+
+RUN cargo install --locked --path .
+
+EXPOSE 6924/tcp
